@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="Home"/>
+
+    <item
+        android:id="@+id/lectures"
+        android:icon="@drawable/ic_baseline_ondemand_video_24"
+        android:title="Lectures"/>
+
+    <item
+        android:id="@+id/Qbank"
+        android:icon="@drawable/ic_baseline_question_answer_24"
+        android:title="Assignments"/>
+
+
+</menu>
