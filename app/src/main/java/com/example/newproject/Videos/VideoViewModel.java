@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.newproject.VideoModel;
+
 import java.util.List;
 
 public class VideoViewModel extends AndroidViewModel {

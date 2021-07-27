@@ -9,22 +9,24 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = VideoModel.class,version = 1)
+import com.example.newproject.VideoModel;
+
+@Database(entities = VideoModel.class, version = 1,exportSchema = false)
 public abstract class DatabaseVideo extends RoomDatabase {
 
     private static DatabaseVideo roomDatabase;
+
     public abstract VideoDao videoDao();
-    public static synchronized DatabaseVideo getInstance(Context context)
-    {
-        if (roomDatabase==null)
-        {
-            roomDatabase= Room.databaseBuilder(context.getApplicationContext(),DatabaseVideo.class,"video_database").fallbackToDestructiveMigration().addCallback(roomCallBack).build();
+
+    public static synchronized DatabaseVideo getInstance(Context context) {
+        if (roomDatabase == null) {
+            roomDatabase = Room.databaseBuilder(context.getApplicationContext(), DatabaseVideo.class, "video_database")
+                    .fallbackToDestructiveMigration().addCallback(roomCallBack).build();
         }
         return roomDatabase;
     }
 
-    private static RoomDatabase.Callback roomCallBack=new RoomDatabase.Callback()
-    {
+    private static RoomDatabase.Callback roomCallBack = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -32,12 +34,11 @@ public abstract class DatabaseVideo extends RoomDatabase {
         }
     };
 
-    private static class PopulateDbAsync extends AsyncTask<Void,Void,Void>
-    {
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
         private VideoDao videoDao;
-        private PopulateDbAsync(DatabaseVideo db)
-        {
-            videoDao=db.videoDao();
+
+        private PopulateDbAsync(DatabaseVideo db) {
+            videoDao = db.videoDao();
         }
 
         @Override

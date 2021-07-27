@@ -7,6 +7,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.newproject.VideoModel;
+
 import java.util.List;
 
 @Dao
@@ -22,6 +24,6 @@ public interface VideoDao {
     void delete(VideoModel video);
 
 
-    @Query("SELECT * FROM video_table ORDER BY date DESC")
+    @Query("SELECT * FROM video_table")
     LiveData<List<VideoModel>> getAllVideos();
 }

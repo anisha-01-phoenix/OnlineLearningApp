@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.newproject.MainActivity;
 import com.example.newproject.R;
+import com.example.newproject.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
+    ActivityLoginBinding activityLoginBinding;
 
     @Override
     protected void onStart() {
@@ -40,47 +42,43 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        activityLoginBinding=ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(activityLoginBinding.getRoot());
         getSupportActionBar().hide();
-        findViewById(R.id.forgotPassword).setOnClickListener(new View.OnClickListener() {
+        activityLoginBinding.forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, Forgot_Password.class));
             }
         });
-        findViewById(R.id.gotosignup).setOnClickListener(new View.OnClickListener() {
+        activityLoginBinding.gotosignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
             }
         });
-        EditText emailETLogin=findViewById(R.id.emailLogin);
-        EditText passETLogin=findViewById(R.id.passwordLogin);
-        Button loginBtn=findViewById(R.id.login);
-        ProgressBar progressBar=findViewById(R.id.progressBar2);
-
-        auth=FirebaseAuth.getInstance();
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+         auth=FirebaseAuth.getInstance();
+         activityLoginBinding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email_text=emailETLogin.getText().toString();
-                String pass_text=passETLogin.getText().toString();
+                String email_text=activityLoginBinding.emailLogin.getText().toString();
+                String pass_text=activityLoginBinding.passwordLogin.getText().toString();
                 if (email_text.isEmpty()) {
-                    emailETLogin.setError("Email ID is Required");
-                    emailETLogin.requestFocus();
+                    activityLoginBinding.emailLogin.setError("Email ID is Required");
+                    activityLoginBinding.emailLogin.requestFocus();
                     return;
                 }else if (!Patterns.EMAIL_ADDRESS.matcher(email_text).matches()) {
-                    emailETLogin.setError("Email ID is invalid");
-                    emailETLogin.requestFocus();
+                    activityLoginBinding.emailLogin.setError("Email ID is invalid");
+                    activityLoginBinding.emailLogin.requestFocus();
                     return;
                 }
                 if (pass_text.isEmpty()) {
-                    passETLogin.setError("Password is Required");
-                    passETLogin.requestFocus();
+                    activityLoginBinding.passwordLogin.setError("Password is Required");
+                    activityLoginBinding.passwordLogin.requestFocus();
                     return;
                 }
 
-                progressBar.setVisibility(View.VISIBLE);
+                activityLoginBinding.progressBar2.setVisibility(View.VISIBLE);
 
                 auth.signInWithEmailAndPassword(email_text,pass_text).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -90,12 +88,12 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent i=new Intent(LoginActivity.this,MainActivity.class);
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
-                                progressBar.setVisibility(View.GONE);
+                                activityLoginBinding.progressBar2.setVisibility(View.GONE);
                                 finish();
                             }
                             else {
                                 Toast.makeText(LoginActivity.this,"Authentication failed!",Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
+                                activityLoginBinding.progressBar2.setVisibility(View.GONE);
                             }
                         }
                     });

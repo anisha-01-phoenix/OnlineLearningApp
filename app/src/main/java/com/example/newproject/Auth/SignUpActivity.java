@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.newproject.MainActivity;
 import com.example.newproject.R;
+import com.example.newproject.databinding.ActivitySignUpBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -27,84 +29,78 @@ public class SignUpActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     DatabaseReference myRef;
-    ProgressBar bar;
-
+    ActivitySignUpBinding activitySignUpBinding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        activitySignUpBinding=ActivitySignUpBinding.inflate(getLayoutInflater());
+        setContentView(activitySignUpBinding.getRoot());
         getSupportActionBar().hide();
-        EditText nameEdtTxt=findViewById(R.id.name);
-        EditText usernameEdtTxt=findViewById(R.id.username);
-        EditText mailEdtTxt=findViewById(R.id.email);
-        EditText passwordEdtTxt=findViewById(R.id.password);
-        EditText confirmEdtTxt=findViewById(R.id.confirmPassword);
-        findViewById(R.id.gotologin).setOnClickListener(new View.OnClickListener() {
+        activitySignUpBinding.gotologin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             }
         });
         auth=FirebaseAuth.getInstance();
-        findViewById(R.id.signup).setOnClickListener(new View.OnClickListener() {
+        activitySignUpBinding.signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = nameEdtTxt.getText().toString();
-                String userName = usernameEdtTxt.getText().toString();
-                String email = mailEdtTxt.getText().toString();
-                String confirmPassword = confirmEdtTxt.getText().toString();
-                String password = passwordEdtTxt.getText().toString();
+                String name = activitySignUpBinding.name.getText().toString();
+                String userName = activitySignUpBinding.username.getText().toString();
+                String email = activitySignUpBinding.email.getText().toString();
+                String confirmPassword = activitySignUpBinding.confirmPassword.getText().toString();
+                String password = activitySignUpBinding.password.getText().toString();
                 if (name.isEmpty()) {
-                    nameEdtTxt.setError("Name is Required");
-                    nameEdtTxt.requestFocus();
+                    activitySignUpBinding.name.setError("Name is Required");
+                    activitySignUpBinding.name.requestFocus();
                     return;
                 }
                 if (userName.isEmpty()) {
-                    usernameEdtTxt.setError("User Name is Required");
-                    usernameEdtTxt.requestFocus();
+                    activitySignUpBinding.username.setError("User Name is Required");
+                    activitySignUpBinding.username.requestFocus();
                     return;
                 }
                 if (email.isEmpty()) {
-                    mailEdtTxt.setError("Email ID is Required");
-                    mailEdtTxt.requestFocus();
+                    activitySignUpBinding.email.setError("Email ID is Required");
+                    activitySignUpBinding.email.requestFocus();
                     return;
                 }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    mailEdtTxt.setError("Email ID is invalid");
-                    mailEdtTxt.requestFocus();
+                    activitySignUpBinding.email.setError("Email ID is invalid");
+                    activitySignUpBinding.email.requestFocus();
                     return;
                 }
                 if (password.isEmpty()) {
-                    passwordEdtTxt.setError("Password is Required");
-                    passwordEdtTxt.requestFocus();
+                    activitySignUpBinding.password.setError("Password is Required");
+                    activitySignUpBinding.password.requestFocus();
                     return;
                 }
                 else if (password.length()<6)
                 {
-                    passwordEdtTxt.setError("Password should contain minimum 6 characters!");
-                    passwordEdtTxt.requestFocus();
+                    activitySignUpBinding.password.setError("Password should contain minimum 6 characters!");
+                    activitySignUpBinding.password.requestFocus();
                     return;
                 }
 
                 if (confirmPassword.isEmpty()) {
-                    confirmEdtTxt.setError("Confirm your Password!");
-                    confirmEdtTxt.requestFocus();
+                    activitySignUpBinding.confirmPassword.setError("Confirm your Password!");
+                    activitySignUpBinding.confirmPassword.requestFocus();
                     return;
                 }
                 else if (password.length()<6)
                 {
-                    confirmEdtTxt.setError("Password should contain minimum 6 characters!");
-                    confirmEdtTxt.requestFocus();
+                    activitySignUpBinding.confirmPassword.setError("Password should contain minimum 6 characters!");
+                    activitySignUpBinding.confirmPassword.requestFocus();
                     return;
                 }
                 else if(password.equals(confirmPassword)== false)
                 {
-                    confirmEdtTxt.setError("Does not match the Password!");
-                    confirmEdtTxt.requestFocus();
+                    activitySignUpBinding.confirmPassword.setError("Does not match the Password!");
+                    activitySignUpBinding.confirmPassword.requestFocus();
                     return;
                 }
                 RegisterNow(email,password,userName);
-                bar=findViewById(R.id.progressBar);
-                bar.setVisibility(View.VISIBLE);
+                activitySignUpBinding.progressBar.setVisibility(View.VISIBLE);
             }
 
         });
@@ -123,7 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             FirebaseUser firebaseUser=auth.getCurrentUser();
                             String userid=firebaseUser.getUid();
-                            myRef= FirebaseDatabase.getInstance().getReference("Users").child(userid);
+                            myRef= FirebaseDatabase.getInstance().getReference("Admin").child(userid);
                             HashMap<String,String> hashMap=new HashMap<>();
                             hashMap.put("id",userid);
                             hashMap.put("username",username);
@@ -137,7 +133,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         Intent i= new Intent(SignUpActivity.this, MainActivity.class);
                                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(i);
-                                        bar.setVisibility(View.GONE);
+                                        activitySignUpBinding.progressBar.setVisibility(View.GONE);
                                         finish();
                                     }
                                 }
@@ -148,11 +144,10 @@ public class SignUpActivity extends AppCompatActivity {
                 }else
                 {
                     Toast.makeText(SignUpActivity.this,"Invalid!",Toast.LENGTH_SHORT).show();
-                    bar.setVisibility(View.GONE);
+                    activitySignUpBinding.progressBar.setVisibility(View.GONE);
                 }
             }
         });
-
 
     }
 }

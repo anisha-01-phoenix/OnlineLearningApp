@@ -12,23 +12,23 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.newproject.R;
+import com.example.newproject.databinding.ActivityForgotPasswordBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Forgot_Password extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
-    EditText emailEditText;
+    ActivityForgotPasswordBinding passwordBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot__password);
-
-        emailEditText=(EditText)findViewById(R.id.emailFP);
-        Button resetPasswordButton=findViewById(R.id.resetPassword);
+        passwordBinding=ActivityForgotPasswordBinding.inflate(getLayoutInflater());
+        setContentView(passwordBinding.getRoot());
+//        Button resetPasswordButton=findViewById(R.id.resetPassword);
         firebaseAuth=FirebaseAuth.getInstance();
-        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
+        passwordBinding.resetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 resetPassword();
@@ -37,16 +37,16 @@ public class Forgot_Password extends AppCompatActivity {
     }
     private void resetPassword()
     {
-        String email=emailEditText.getText().toString().trim();
+        String email=passwordBinding.emailFP.getText().toString().trim();
         if(email.isEmpty())
         {
-            emailEditText.setError("Email is Required!");
-            emailEditText.requestFocus();
+            passwordBinding.emailFP.setError("Email is Required!");
+            passwordBinding.emailFP.requestFocus();
             return;
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailEditText.setError("Email ID is Invalid!");
-            emailEditText.requestFocus();
+            passwordBinding.emailFP.setError("Email ID is Invalid!");
+            passwordBinding.emailFP.requestFocus();
             return;
         }
 

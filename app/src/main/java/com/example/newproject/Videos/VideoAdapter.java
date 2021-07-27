@@ -1,29 +1,33 @@
 package com.example.newproject.Videos;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.newproject.R;
+import com.example.newproject.Upload.PlayVideo;
+import com.example.newproject.VideoModel;
+import com.example.newproject.databinding.VideoLayoutBinding;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder> {
 
     List<VideoModel> list=new ArrayList<>();
+    private VideoModel videoModel;
+
     @NonNull
     @Override
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.video_layout,parent,false);
-        return new VideoViewHolder(view);
+
+        LayoutInflater layoutInflater=LayoutInflater.from(parent.getContext());
+        VideoLayoutBinding videoLayoutBinding =VideoLayoutBinding.inflate(layoutInflater,parent,false);
+        return new VideoViewHolder(videoLayoutBinding);
+
     }
 
     public void setVideos(List<VideoModel> list)
@@ -34,14 +38,19 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
 
-        VideoModel videoModel=list.get(position);
-       /* Calendar calendar=Calendar.getInstance();
-        String currentdate = DateFormat.getDateInstance().format(calendar.getTime());*/
-        videoModel.setDate(new Date());
-
-        holder.date.setText(String.valueOf(videoModel.getDate()));
-        holder.title.setText(videoModel.getTitle());
-        holder.description.setText(videoModel.getDescription());
+        videoModel=list.get(position);
+        holder.videoLayoutBinding.setVideomodel(videoModel);
+        holder.videoLayoutBinding.executePendingBindings();
+        holder.videoLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(v.getContext(),PlayVideo.class);
+                intent.putExtra("VideoUrl",videoModel.getVideourl());
+                v.getContext().startActivity(intent);
+            }
+        });
+        /*  holder.videoView.setVideoURI(Uri.parse(videoModel.getVideourl()));
+        holder.videoView.requestFocus();*/
 
     }
 
@@ -51,13 +60,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder {
-        TextView date, title, description;
 
-        public VideoViewHolder(@NonNull View itemView) {
-            super(itemView);
-            date=itemView.findViewById(R.id.videoDate);
-            title=itemView.findViewById(R.id.Title);
-            description=itemView.findViewById(R.id.desc);
+        VideoLayoutBinding videoLayoutBinding;
+        public VideoViewHolder(@NonNull VideoLayoutBinding videoLayoutBinding) {
+            super(videoLayoutBinding.getRoot());
+            this.videoLayoutBinding=videoLayoutBinding;
+
         }
     }
 }
