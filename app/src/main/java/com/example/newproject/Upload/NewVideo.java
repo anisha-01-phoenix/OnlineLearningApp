@@ -72,7 +72,6 @@ public class NewVideo extends AppCompatActivity {
                 }
                 else
                     if (activityNewVideoBinding.goLiveOption.isChecked()) {
-                        //https://bambuser.com/docs/video-platform/broadcasting/android/
                     }
             }
         });
