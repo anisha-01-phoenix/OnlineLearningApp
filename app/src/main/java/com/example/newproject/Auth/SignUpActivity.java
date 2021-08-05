@@ -30,10 +30,11 @@ public class SignUpActivity extends AppCompatActivity {
     FirebaseAuth auth;
     DatabaseReference myRef;
     ActivitySignUpBinding activitySignUpBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activitySignUpBinding=ActivitySignUpBinding.inflate(getLayoutInflater());
+        activitySignUpBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(activitySignUpBinding.getRoot());
         getSupportActionBar().hide();
         activitySignUpBinding.gotologin.setOnClickListener(new View.OnClickListener() {
@@ -42,7 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             }
         });
-        auth=FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         activitySignUpBinding.signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
                     activitySignUpBinding.email.setError("Email ID is Required");
                     activitySignUpBinding.email.requestFocus();
                     return;
-                }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     activitySignUpBinding.email.setError("Email ID is invalid");
                     activitySignUpBinding.email.requestFocus();
                     return;
@@ -74,9 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
                     activitySignUpBinding.password.setError("Password is Required");
                     activitySignUpBinding.password.requestFocus();
                     return;
-                }
-                else if (password.length()<6)
-                {
+                } else if (password.length() < 6) {
                     activitySignUpBinding.password.setError("Password should contain minimum 6 characters!");
                     activitySignUpBinding.password.requestFocus();
                     return;
@@ -86,20 +85,16 @@ public class SignUpActivity extends AppCompatActivity {
                     activitySignUpBinding.confirmPassword.setError("Confirm your Password!");
                     activitySignUpBinding.confirmPassword.requestFocus();
                     return;
-                }
-                else if (password.length()<6)
-                {
+                } else if (password.length() < 6) {
                     activitySignUpBinding.confirmPassword.setError("Password should contain minimum 6 characters!");
                     activitySignUpBinding.confirmPassword.requestFocus();
                     return;
-                }
-                else if(password.equals(confirmPassword)== false)
-                {
+                } else if (password.equals(confirmPassword) == false) {
                     activitySignUpBinding.confirmPassword.setError("Does not match the Password!");
                     activitySignUpBinding.confirmPassword.requestFocus();
                     return;
                 }
-                RegisterNow(email,password,userName);
+                RegisterNow(email, password, userName, name);
                 activitySignUpBinding.progressBar.setVisibility(View.VISIBLE);
             }
 
@@ -108,30 +103,30 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    private void RegisterNow(String email, String password, String username) {
+    private void RegisterNow(String email, String password, String username, String name) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            FirebaseUser firebaseUser=auth.getCurrentUser();
-                            String userid=firebaseUser.getUid();
-                            myRef= FirebaseDatabase.getInstance().getReference("Admin").child(userid);
-                            HashMap<String,String> hashMap=new HashMap<>();
-                            hashMap.put("id",userid);
-                            hashMap.put("username",username);
+                            FirebaseUser firebaseUser = auth.getCurrentUser();
+                            String userid = firebaseUser.getUid();
+                            myRef = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("id", userid);
+                            hashMap.put("name", name);
+                            hashMap.put("username", username);
+                            hashMap.put("imageurl", "https://tse2.mm.bing.net/th?id=OIP.NYi0ibx-GnoFsgKhwj8WfgHaLZ&pid=Api&P=0&w=300&h=300");
 
                             myRef.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful())
-                                    {
-                                        Toast.makeText(SignUpActivity.this,"Check your email and verify your email address!",Toast.LENGTH_SHORT).show();
-                                        Intent i= new Intent(SignUpActivity.this, MainActivity.class);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(SignUpActivity.this, "Check your email and verify your email address!", Toast.LENGTH_SHORT).show();
+                                        Intent i = new Intent(SignUpActivity.this, MainActivity.class);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(i);
                                         activitySignUpBinding.progressBar.setVisibility(View.GONE);
                                         finish();
@@ -141,9 +136,8 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
 
-                }else
-                {
-                    Toast.makeText(SignUpActivity.this,"Invalid!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Invalid!", Toast.LENGTH_SHORT).show();
                     activitySignUpBinding.progressBar.setVisibility(View.GONE);
                 }
             }

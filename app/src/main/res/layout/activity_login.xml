@@ -84,6 +84,7 @@
         android:id="@+id/gotosignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
         android:text="Don't have an account? Register Now"
         android:textColor="#1E2861"
         android:textSize="18sp"

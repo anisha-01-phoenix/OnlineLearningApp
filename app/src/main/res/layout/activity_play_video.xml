@@ -2,22 +2,41 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pip"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Upload.PlayVideo"
-    android:background="@android:color/holo_blue_bright">
+    android:background="@android:color/holo_blue_dark"
+    tools:context=".Upload.PlayVideo">
 
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/exoplayer_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/black"
+        app:controller_layout_id="@layout/custom_control"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:resize_mode="fill"
-        app:use_controller="true"
-        app:show_buffering="when_playing"/>
+        app:resize_mode="fixed_width"
+        app:show_buffering="when_playing">
+
+    </com.google.android.exoplayer2.ui.PlayerView>
+
+
+    <ImageButton
+        android:id="@+id/pipMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="enterPip"
+        android:src="@drawable/ic_baseline_close_fullscreen_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/exoplayer_item"
+        app:layout_constraintVertical_bias="0.050000012"
+        android:background="@drawable/pip_mode"
+        android:padding="10dp"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,46 +1,31 @@
 package com.example.newproject;
 
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
+import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 
-import java.util.Date;
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
-@Entity(tableName = "video_table")
+
 public class VideoModel {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
     private String title;
-    private String videourl;
-    private String date;
     private String description;
 
-    public VideoModel()
-    {}
+    private String date;
+    private String videourl;
 
-    public VideoModel(String title, String videourl, String date, String description) {
+
+    public VideoModel(String title, String description, String date, String videourl) {
         this.title = title;
-        this.videourl = videourl;
-        this.date = date;
         this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.date = date;
+        this.videourl = videourl;
     }
 
     public String getTitle() {
@@ -51,12 +36,12 @@ public class VideoModel {
         this.title = title;
     }
 
-    public String getVideourl() {
-        return videourl;
+    public String getDescription() {
+        return description;
     }
 
-    public void setVideourl(String videourl) {
-        this.videourl = videourl;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDate() {
@@ -67,18 +52,17 @@ public class VideoModel {
         this.date = date;
     }
 
-    public String getDescription() {
-        return description;
+    public String getVideourl() {
+        return videourl;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setVideourl(String videourl) {
+        this.videourl = videourl;
     }
 
-  /*  @BindingAdapter("android:loadVideo")
-    public static void loadVideo(ImageView imageView, String videourl)
-    {
-            Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videourl, MediaStore.Video.Thumbnails.MICRO_KIND);
-            imageView.setImageBitmap(thumb);
-    } */
+
+    @BindingAdapter("android:loadThumbnail")
+    public static void loadThumbnail(ImageView view, String videourl) {
+        Glide.with(view.getContext()).asBitmap().load(videourl).into(view);
+    }
 }

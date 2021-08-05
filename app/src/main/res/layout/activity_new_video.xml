@@ -43,107 +43,86 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VIDEO TYPE"
-        android:layout_below="@+id/inputDescription"
-        android:layout_centerHorizontal="true"
-        android:textColor="#3F51B5"
-        android:textSize="24dp"
-        android:id="@+id/text"
-        android:layout_margin="10dp"
-        android:textStyle="bold"/>
-
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text"
-        android:id="@+id/options"
-        android:layout_marginLeft="10dp"
-        android:layout_centerHorizontal="true">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UPLOAD VIDEO"
-            android:id="@+id/uploadVideoOption" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UPLOAD LINK"
-            android:id="@+id/uploadLinkOption"/>
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GO LIVE"
-            android:id="@+id/goLiveOption"/>
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/gotoVideo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/options"
-        android:layout_marginTop="32dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/button"
-        android:text="   GO   "
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"/>
 
     <RelativeLayout
         android:id="@+id/uploadvideoview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/gotoVideo"
-        android:visibility="gone"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@+id/inputDescription"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp">
 
         <VideoView
             android:id="@+id/videoview"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/chooseVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose Video"
             android:layout_below="@+id/videoview"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/purple_700"
             android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"/>
+            android:layout_margin="20dp"
+            android:text="Choose Video"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/purple_700" />
+
+        <TextView
+            android:id="@+id/or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/chooseVideo"
+            android:layout_centerHorizontal="true"
+            android:text="OR"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@android:color/black" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/enterLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/or"
+            android:layout_margin="10dp"
+            app:errorEnabled="true">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="Enter Video Link"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <Button
             android:id="@+id/uploadBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/enterLink"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/button"
             android:text="    UPLOAD    "
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/black"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_below="@+id/chooseVideo"/>
+            android:textColor="@color/black" />
 
         <ProgressBar
             android:id="@+id/progressBar_upload"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_below="@+id/uploadBtn"
+            android:layout_margin="10dp"
             android:indeterminate="true"
             android:indeterminateTint="#3F51B5"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
 
     </RelativeLayout>

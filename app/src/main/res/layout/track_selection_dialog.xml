@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/gradient">
+    android:background="#2196F3">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/track_selection_dialog_view_pager"
@@ -14,6 +14,7 @@
             android:id="@+id/track_selection_dialog_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#2196F3"
             app:tabGravity="fill"
             app:tabMode="fixed" />
 
@@ -30,7 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@android:string/cancel"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             style="?android:attr/borderlessButtonStyle"/>
 
         <Button
@@ -38,7 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@android:string/ok"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             style="?android:attr/borderlessButtonStyle"/>
 
     </LinearLayout>

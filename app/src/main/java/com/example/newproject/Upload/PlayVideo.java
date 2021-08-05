@@ -1,6 +1,6 @@
 package com.example.newproject.Upload;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -9,14 +9,13 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.newproject.R;
-import com.example.newproject.TrackSelectionDialog;
 import com.example.newproject.databinding.ActivityPlayVideoBinding;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -24,46 +23,48 @@ import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.PlayerControlView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.ui.PlayerView;
 
 public class PlayVideo extends AppCompatActivity {
 
-    ActivityPlayVideoBinding activityPlayVideoBinding;
+    //https://androidwave.com/exoplayer-in-recyclerview-in-android/
+
+    private boolean isShowingTrackSelectionDialog;
     private DefaultTrackSelector trackSelector;
-    private SimpleExoPlayer simpleExoPlayer;
-    String[] speed={"0.25x","0.5x","Normal","1.5x","2x"};
-    private MediaItem mediaItem;
+    String[] speed = {"0.25x","0.5x","Normal","1.5x","2x"};
     String url;
-    boolean trackDialog;
+    PlayerView playerView;
+    SimpleExoPlayer simpleExoPlayer;
     private Uri uri;
+    ImageView forwordBtn,rewBtn,setting,speedBtn;
+    TextView  speedTxt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityPlayVideoBinding = ActivityPlayVideoBinding.inflate(getLayoutInflater());
-        setContentView(activityPlayVideoBinding.getRoot());
+        setContentView(R.layout.activity_play_video);
+
+        getSupportActionBar().hide();
         url = getIntent().getStringExtra("VideoUrl");
         uri=Uri.parse(url);
-        trackSelector=new DefaultTrackSelector(this);
-        simpleExoPlayer = new SimpleExoPlayer.Builder(this).build();
-        activityPlayVideoBinding.exoplayerItem.setPlayer(simpleExoPlayer);
-        mediaItem = MediaItem.fromUri(uri);
-        simpleExoPlayer.setMediaItem(mediaItem);
+        trackSelector = new DefaultTrackSelector(this);
+        simpleExoPlayer = new SimpleExoPlayer.Builder(this).setTrackSelector(trackSelector).build();
+        playerView = findViewById(R.id.exoplayer_item);
+        playerView.setPlayer(simpleExoPlayer);
+        MediaItem mediaItem = MediaItem.fromUri(uri.toString());
+        simpleExoPlayer.addMediaItem(mediaItem);
         simpleExoPlayer.prepare();
         simpleExoPlayer.play();
 
-        ImageView farwordBtn = activityPlayVideoBinding.exoplayerItem.getRootView().findViewById(R.id.fwd);
-        ImageView rewBtn = activityPlayVideoBinding.exoplayerItem.getRootView().findViewById(R.id.rew);
-        ImageView setting = activityPlayVideoBinding.exoplayerItem.getRootView().findViewById(R.id.exo_track_selection_view);
-        ImageView speedBtn = activityPlayVideoBinding.exoplayerItem.getRootView().findViewById(R.id.exo_playback_speed);
-        TextView speedTxt = activityPlayVideoBinding.exoplayerItem.getRootView().findViewById(R.id.speed);
+        forwordBtn = playerView.findViewById(R.id.fwd);
+        rewBtn = playerView.findViewById(R.id.rew);
+        setting = playerView.findViewById(R.id.exo_track_selection_view);
+        speedBtn = playerView.findViewById(R.id.playback_speed);
+        speedTxt = playerView.findViewById(R.id.speed);
 
 
-
-       speedBtn.setOnClickListener(new View.OnClickListener() {
+        speedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -119,7 +120,7 @@ public class PlayVideo extends AppCompatActivity {
         });
 
 
-        farwordBtn.setOnClickListener(new View.OnClickListener() {
+        forwordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -147,7 +148,7 @@ public class PlayVideo extends AppCompatActivity {
             }
         });
 
-        ImageView fullscreenButton = activityPlayVideoBinding.exoplayerItem.getRootView().findViewById(R.id.fullscreen);
+        ImageView fullscreenButton = playerView.findViewById(R.id.fullscreen);
         fullscreenButton.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SourceLockedOrientationActivity")
             @Override
@@ -164,8 +165,6 @@ public class PlayVideo extends AppCompatActivity {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
                 }
-
-
             }
         });
 
@@ -202,13 +201,13 @@ public class PlayVideo extends AppCompatActivity {
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!trackDialog
+                if (!isShowingTrackSelectionDialog
                         && TrackSelectionDialog.willHaveContent(trackSelector)) {
-                    trackDialog = true;
+                    isShowingTrackSelectionDialog = true;
                     TrackSelectionDialog trackSelectionDialog =
                             TrackSelectionDialog.createForTrackSelector(
                                     trackSelector,
-                                    dismissedDialog -> trackDialog = false);
+                                    dismissedDialog -> isShowingTrackSelectionDialog = false);
                     trackSelectionDialog.show(getSupportFragmentManager(),null);
 
 
@@ -237,4 +236,15 @@ public class PlayVideo extends AppCompatActivity {
         releasePlayer();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void enterPip(View view) {
+        enterPictureInPictureMode();
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+        if (isInPictureInPictureMode)
+            getSupportActionBar().hide();
+    }
 }
